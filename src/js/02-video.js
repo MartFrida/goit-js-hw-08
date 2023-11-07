@@ -1,16 +1,17 @@
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
+import localStorageApi from './storage';
 
 const iframe = document.querySelector('iframe');
 const player = new Player(iframe);
-let timePosition = JSON.parse(localStorage.getItem('videoplayer-current-time'));
+let timePosition = localStorageApi.load('videoplayer-current-time');
 console.log('timePosition', timePosition);
 
 // методa on() і відстежувати подію timeupdate - оновлення часу відтворення.
 
 player.on('timeupdate', throttle(function (ev) {
   console.log('played the video!', ev.seconds);
-  localStorage.setItem("videoplayer-current-time", JSON.stringify(ev.seconds));
+  localStorageApi.save("videoplayer-current-time", ev.seconds);
 }, 1000));
 
 player.getVideoTitle().then(function (title) {
